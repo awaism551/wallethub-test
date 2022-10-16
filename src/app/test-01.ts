@@ -12,12 +12,6 @@ import { RouterModule } from "@angular/router";
 
 @Component({
   templateUrl: "./templates/test-01.html",
-  // selector : 'ng-app',
-  // template : `<div>
-  //                 <h2>Loan Details</h2>
-  //                 <b>Monthly Payment:</b> {{monthly_payment}} <br/>
-  //                 <b>Late Payment Fee : {{late_payment}}</b> <br/>
-  //             </div>`
 })
 export class Test01Component implements OnInit {
   loan_amount: number = 1000;
