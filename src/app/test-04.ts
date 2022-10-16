@@ -6,19 +6,29 @@
 import { Component, NgModule  } from '@angular/core';
 import { RouterModule} from "@angular/router";
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector : 'ng-app',
     template : `
-                <h2>Enter your first and last name</h2>
-                <div>
-                </div>
+                <h2>Enter your first and last name</h2><br/>
+                <label for="firstName">First Name</label>
+                <input type="text" (blur)="generateUserName()" name="firstName" id="firstName" [(ngModel)]="firstName"/><br/>
+                <label for="lastName">Last Name</label>
+                <input type="text" (blur)="generateUserName()" name="lastName" id="lastName" [(ngModel)]="lastName"/><br/>
+                <h3>Generated Username: {{userName}}</h3>
                 `,
     styles : []
 })
 export class UserNameComponent {
-    
-
+    public firstName: string;
+    public lastName: string;
+    public userName: string;
+    generateUserName() {
+        if (this.firstName && this.lastName) {
+            this.userName = `${this.firstName.toLowerCase()}_${this.lastName.toLowerCase()}_${Math.floor(Math.random() * 9) + 1}`
+        }
+    }
 }
 
 @NgModule({
@@ -29,7 +39,8 @@ export class UserNameComponent {
                 path : "",
                 component : UserNameComponent
             }
-        ])
+        ]),
+        FormsModule
     ],
     declarations : [UserNameComponent]
 })

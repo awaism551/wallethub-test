@@ -19,7 +19,7 @@ import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: "ng-app",
-  template: `<form (ngSubmit)="onSubmit()">
+  template: `<form (ngSubmit)="onSubmit()" method="POST">
     <h2>Login</h2>
     <br />
     <input type="email" [(ngModel)]="email" name="email" />
