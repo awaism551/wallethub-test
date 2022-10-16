@@ -1,0 +1,7 @@
+<div>
+    <label for="loanAmount">Loan Amount</label>
+    <input type="number" id="loanAmount" [(ngModel)]="loan_amount" (change)="loanAmountChanged($event)" />
+    <h2>Loan Details</h2>
+    <b>Monthly Payment:</b> {{monthly_payment | currency}} <br/>
+    <b>Late Payment Fee : {{late_payment | currency}}</b> <br/>
+</div>
