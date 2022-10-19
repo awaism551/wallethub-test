@@ -7,7 +7,7 @@
 import { Component, NgModule, Injectable, Input, ChangeDetectorRef  } from '@angular/core';
 import { RouterModule, Router} from "@angular/router";
 import { CommonModule } from '@angular/common';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 // SOLUTION 1: When MainComponent ngOnInit hook has subscribed to the Subject, some value in the Subject was already present so subscription callback is called immediately
 // and MainComponent view is updated, but after that ChildComponent ngAfterViewInit again updates the Subject so subscription callback is called once again, as value of MainComponent 
@@ -17,6 +17,8 @@ import { BehaviorSubject, Subject } from 'rxjs';
 // should not update the parent. thats a bad practice
 
 // SOLUTION 3: if child has to update the parent, then it should be done async so that it will be picked up in next change detection i.e setTimeout, immediately resolving Promise
+
+// MEMORY LEAK: we have to unsubscribe all the infinite subscriptions before the component is being destroyed by angular otherwise it will cause a memory leak
 
 @Injectable()
 export class TestService {
@@ -42,12 +44,13 @@ export class TestService {
 })
 export class MainComponent {
     test:string = null;
+    sub;
     constructor(private _srv:TestService, private cdref: ChangeDetectorRef) {
         console.log('in maincomponent constructor');        
     }
     ngOnInit() {
         console.log('in main comp ngoninit');
-        this._srv.test.subscribe(test=>{
+        this.sub = this._srv.test.subscribe(test=>{
             console.log('subscribe callback called');
             this.test = test;
         });
@@ -55,6 +58,10 @@ export class MainComponent {
     // ngAfterContentChecked() {
     //     this.cdref.detectChanges();
     // }
+    ngOnDestroy() {
+        console.log('main component destroy');
+        this.sub.unsubscribe();
+    }
 }
 
 @Component({
