@@ -4,15 +4,33 @@
  * The span elements should be separated by a single space.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 function DataList(props) {
+  // console.log(props)
+  // console.log('props')
+  let data = props.data;
   return (
-    <h2>code goes here</h2>
+    <>
+      <ul>
+        {data.map(person => 
+        (
+          <li>
+            <span>{person.name}</span>&nbsp;
+            <span>{person.age}</span>
+          </li>
+        ))
+        }
+      </ul>
+    </>
   );
 }
 
+// interface Person {
+//   name: string;
+//   age: number;
+// }
 const data = [
   { name: 'Daniel', age: 25 },
   { name: 'John', age: 24 },
@@ -20,6 +38,6 @@ const data = [
 ];
 
 ReactDOM.render(
-  <DataList data={ data } />,
+  <DataList data={data} />,
   document.getElementById('test-01')
 );
