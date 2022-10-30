@@ -6,16 +6,23 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-class Counter extends React.Component {
+type counterProps = {}
+type counterState = {
+  count: number
+}
+class Counter extends React.Component<counterProps, counterState> {
   constructor(props) {
     super(props);
+    this.state = {
+      count: 0
+    }
   }
 
   render() {
     return (
       <div id="mainArea">
-        <p>button count: <span>0</span></p>
-        <button id="mainButton">Increase</button>
+        <p>button count: <span>{this.state.count}</span></p>
+        <button onClick={() => this.setState({ count: this.state.count + 1 })} id="mainButton">Increase</button>
       </div>
     );
   }

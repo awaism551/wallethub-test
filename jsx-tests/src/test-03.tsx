@@ -46,9 +46,33 @@ const style = {
     }
 } as const;
 
-function PhoneBookForm({ addEntryToPhoneBook }) {
+interface PhoneBook {
+    firstName: string;
+    lastName: string;
+    phone: number;
+}
+
+function PhoneBookForm({ addEntryToPhoneBook, onSubmit }) {
+    const [firstName, setfirstName] = useState<string>(addEntryToPhoneBook.firstName)
+    const [lastName, setlastName] = useState<string>(addEntryToPhoneBook.lastName)
+    const [phone, setphone] = useState<number>(addEntryToPhoneBook.phone)
+    const localSubmit = (e) => {
+        e.preventDefault();
+        let obj: PhoneBook = {
+            firstName,
+            lastName,
+            phone
+        }
+        onSubmit(obj);
+        reset();
+    }
+    const reset = () => {
+        setfirstName("")
+        setlastName("")
+        setphone(0)
+    }
     return (
-        <form onSubmit={e => { e.preventDefault() }} style={style.form.container}>
+        <form onSubmit={localSubmit} style={style.form.container}>
             <label>First name:</label>
             <br />
             <input
@@ -56,6 +80,10 @@ function PhoneBookForm({ addEntryToPhoneBook }) {
                 className='userFirstname'
                 name='userFirstname'
                 type='text'
+                value={firstName}
+                onChange={(event) => {
+                    setfirstName(event.target.value)
+                }}
             />
             <br />
             <label>Last name:</label>
@@ -65,6 +93,10 @@ function PhoneBookForm({ addEntryToPhoneBook }) {
                 className='userLastname'
                 name='userLastname'
                 type='text'
+                value={lastName}
+                onChange={(event) => {
+                    setlastName(event.target.value)
+                }}
             />
             <br />
             <label>Phone:</label>
@@ -74,6 +106,10 @@ function PhoneBookForm({ addEntryToPhoneBook }) {
                 className='userPhone'
                 name='userPhone'
                 type='text'
+                value={phone}
+                onChange={(event) => {
+                    setphone(+event.target.value)
+                }}
             />
             <br />
             <input
@@ -86,7 +122,7 @@ function PhoneBookForm({ addEntryToPhoneBook }) {
     )
 }
 
-function InformationTable(props) {
+function InformationTable({data}) {
     return (
         <table style={style.table} className='informationTable'>
             <thead>
@@ -96,15 +132,35 @@ function InformationTable(props) {
                     <th style={style.tableCell}>Phone</th>
                 </tr>
             </thead>
+            <tbody>
+                {data.map((entry: PhoneBook) => (
+                    <tr>
+                        <td>{entry.firstName}</td>
+                        <td>{entry.lastName}</td>
+                        <td>{entry.phone}</td>
+                    </tr>
+                ))}
+            </tbody>
         </table>
     );
 }
 
 function Application(props) {
+    const [data, setData] = useState<PhoneBook[]>([]);
+    const initialData: PhoneBook = {
+        firstName: 'Coder',
+        lastName: 'Byte',
+        phone: 8885559999
+    }
+    const onSubmit = (incomingData: PhoneBook) => {
+        let temp: PhoneBook[] = JSON.parse(JSON.stringify(data))
+        temp.push(incomingData)
+        setData(temp);
+    }
     return (
         <section>
-            <PhoneBookForm addEntryToPhoneBook="" />
-            <InformationTable />
+            <PhoneBookForm addEntryToPhoneBook={initialData} onSubmit={onSubmit}/>
+            <InformationTable data={data}/>
         </section>
     );
 }
