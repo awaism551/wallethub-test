@@ -12,8 +12,11 @@ import {fastify } from "fastify";
 const data = { error : false, users : ["John Doe","Lucita Esau", "Thomas Friedman", "Norma Helms", "Amy Manning"]  };
 
 // write the json saving code here
-
-
+try {
+    fs.writeFileSync('./npm-tests/data.json', JSON.stringify(data.users))
+} catch (error) {
+    console.error(error);
+}
 const app = fastify({
     ignoreTrailingSlash : true,
     keepAliveTimeout : 65 * 1000
@@ -24,20 +27,25 @@ app.get('/',(request,reply)=>{
 
     reply.header('Content-Type', 'text/html; charset=utf-8');
     // read the json here and insert the list names into the html
-
+    try {
+        const data = JSON.parse(fs.readFileSync('./npm-tests/data.json', 'utf-8'));
+        let personNames = '';
+        data.forEach(person => {
+            personNames = `${personNames} <p>${person}</p><br/>`
+        })
         const page = 
         `<html>
             <head>
                 <title>Wallethub Test</title>
             </head>
             <body>
-            <p>..print the list here..</p>
+                ${personNames}
             </body>
-        </html>`;
-        
-        reply.send(page);
-    
-    
+        </html>`;        
+        reply.send(page);    
+    } catch (error) {
+        console.error(error)
+    }
 });
 
 // server start
